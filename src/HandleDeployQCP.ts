@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { exec } from 'child_process';
 import { Connection } from '@salesforce/core';
+import { Schema, SObjectUpdateRecord } from 'jsforce';
 import { CpqQcpDeployResult } from './commands/cpq/qcp/deploy';
 
 interface CustomScript {
@@ -76,7 +77,12 @@ async function upsertQuoteCalculatorPlugin(conn: Connection, qcp: CustomScript):
   if (!qcp.Id) {
     result = await conn.insert('SBQQ__CustomScript__c', qcp);
   } else {
-    result = await conn.update('SBQQ__CustomScript__c', qcp);
+    const res = await conn.update('SBQQ__CustomScript__c', [
+      qcp as SObjectUpdateRecord<Schema, 'SBQQ__CustomScript__c'>,
+    ]);
+    if (res.length > 0) {
+      result = res[0];
+    }
   }
   return result;
 }
