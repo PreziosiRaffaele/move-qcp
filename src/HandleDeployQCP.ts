@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import { exec } from 'child_process';
 import { Connection } from '@salesforce/core';
 import { Schema, SObjectUpdateRecord } from 'jsforce';
