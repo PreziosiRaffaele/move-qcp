@@ -23,12 +23,12 @@ interface DmlResult {
 
 export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
   try {
-    const [, fetchResult] = await Promise.all([
+    const [script, fetchResult] = await Promise.all([
       rollup(flags.pathmain),
       fetchQuoteCalculatorPlugin(conn, flags.qcpname),
     ]);
     const qcp: CustomScript = fetchResult ?? { Name: flags.qcpname };
-    qcp['SBQQ__Code__c'] = await getScript();
+    qcp['SBQQ__Code__c'] = script;
     const dmlResult: DmlResult = await upsertQuoteCalculatorPlugin(conn, qcp);
     return { isSuccess: dmlResult.success };
   } catch (err) {
@@ -37,25 +37,13 @@ export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpD
 }
 
 function rollup(path: string): Promise<string> {
-  const cmd = `rollup ${path} --file scriptQCP.js --format esm`;
+  const cmd = `rollup ${path} --format esm`;
   return new Promise((resolve, reject) => {
     exec(cmd, {}, (err, stdout) => {
       if (err) {
         reject(err);
       } else {
         resolve(stdout);
-      }
-    });
-  });
-}
-
-function getScript(): Promise<string> {
-  return new Promise((resolve, reject) => {
-    fs.readFile('./scriptQCP.js', 'utf8', (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
       }
     });
   });
