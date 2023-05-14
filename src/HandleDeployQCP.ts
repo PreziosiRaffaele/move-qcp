@@ -29,7 +29,7 @@ export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpD
     const qcp: CustomScript = fetchResult ?? { Name: flags.qcpname };
     qcp['SBQQ__Code__c'] = script;
     const dmlResult: DmlResult = await upsertQuoteCalculatorPlugin(conn, qcp);
-    return { isSuccess: dmlResult.success };
+    return { isSuccess: dmlResult.success, recordId: dmlResult.Id };
   } catch (err) {
     return { isSuccess: false, error: err as string };
   }
