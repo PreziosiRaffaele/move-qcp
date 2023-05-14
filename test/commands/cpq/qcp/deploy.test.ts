@@ -1,18 +1,37 @@
 import { expect, test } from '@oclif/test';
 import { Connection, AuthInfo } from '@salesforce/core';
-import { deployQCP } from '../../../../src/HandleDeployQCP';
+import { CpqQcpDeployResult } from '../../../../src/commands/cpq/qcp/deploy';
 
-describe('cpq qcp deploy', () => {
+describe('deploy qcp', () => {
   test
     .stub(AuthInfo, 'create', () => Promise.resolve({}))
-    .stub(Connection, 'create', () => Promise.resolve({}))
-    .stub(deployQCP, 'rollup', () => Promise.resolve('console.log("hello world");'))
-    .stub(deployQCP, 'fetchQuoteCalculatorPlugin', () => Promise.resolve(null))
-    .stub(deployQCP, 'upsertQuoteCalculatorPlugin', () => Promise.resolve({ Id: 'a0P0o0000123456', success: true }))
+    .stub(Connection, 'create', () =>
+      Promise.resolve({
+        query: () => Promise.resolve({ records: [] }),
+        insert: () => Promise.resolve({ Id: 'a0P0o0000123456', success: true }),
+      })
+    )
     .stdout()
-    .command(['cpq qcp deploy', '--targetusername', 'test', '--pathmain', './main.js', '--qcpname', 'test'])
-    .it('runs cpq qcp deploy', (ctx) => {
-      const expectedOutput = 'Deploying QCP... done';
-      expect(ctx.returned).to.equal(expectedOutput);
+    .command(['cpq qcp deploy', '--targetusername', 'test', '--pathmain', './test/main.js', '--qcpname', 'test'])
+    .it('insert QCP', (ctx) => {
+      const result = ctx.returned as CpqQcpDeployResult;
+      expect(result.isSuccess).to.equal(true);
+      expect(result.recordId).to.equal('a0P0o0000123456');
+    });
+
+  test
+    .stub(AuthInfo, 'create', () => Promise.resolve({}))
+    .stub(Connection, 'create', () =>
+      Promise.resolve({
+        query: () => Promise.resolve({ records: [{ Id: 'a0P0o0000123451', Name: 'test' }] }),
+        update: () => Promise.resolve([{ Id: 'a0P0o0000123451', success: true }]),
+      })
+    )
+    .stdout()
+    .command(['cpq qcp deploy', '--targetusername', 'test', '--pathmain', './test/main.js', '--qcpname', 'test'])
+    .it('update QCP', (ctx) => {
+      const result = ctx.returned as CpqQcpDeployResult;
+      expect(result.isSuccess).to.equal(true);
+      expect(result.recordId).to.equal('a0P0o0000123451');
     });
 });
