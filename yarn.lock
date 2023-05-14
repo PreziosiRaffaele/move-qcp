@@ -923,12 +923,12 @@
     mv "~2"
     safe-json-stringify "~1"
 
-"@salesforce/cli-plugins-testkit@^3.3.3":
-  version "3.3.3"
-  resolved "https://registry.npmjs.org/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-3.3.3.tgz"
-  integrity sha512-BBEMPFbRd20N79PQbodUJUvzTd4L5DVSS07JfXmMmJgpbyy8fgUzQmuczfMiU7Dfs445+1UX8St1Q1JaPp8z6A==
+"@salesforce/cli-plugins-testkit@^3.3.6":
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-3.3.6.tgz#89c17e87a58e1d0bd6006b65568a6883a17e7e5b"
+  integrity sha512-40o363ISrdX1FNyt0YLBouQMMMySXS0YLhozTqSjtZDHZn/9gfcVH1LOz9XsOUd1C4SwnVnVjHH2bdVfHzxRWA==
   dependencies:
-    "@salesforce/core" "^3.34.6"
+    "@salesforce/core" "^3.34.8"
     "@salesforce/kit" "^1.9.2"
     "@salesforce/ts-types" "^1.7.3"
     "@types/shelljs" "^0.8.12"
