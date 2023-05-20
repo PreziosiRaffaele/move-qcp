@@ -27,20 +27,19 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
       char: 'p',
       required: true,
     }),
-    qcpname: Flags.string({
-      summary: messages.getMessage('flags.qcpname.summary'),
-      char: 'n',
-      required: true,
-    }),
   };
 
   public async run(): Promise<CpqQcpDeployResult> {
+    this.log(process.cwd());
     const { flags } = await this.parse(CpqQcpDeploy);
     this.spinner.start('Deploying QCP...');
     const authInfo = await AuthInfo.create({ username: flags.targetusername });
     const conn = await Connection.create({ authInfo });
     const result = await deployQCP(conn, flags);
     this.spinner.stop();
+    if (!result.isSuccess) {
+      throw messages.createError(result.error);
+    }
     return result;
   }
 }

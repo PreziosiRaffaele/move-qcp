@@ -14,10 +14,6 @@ A username or alias for the target org. Overrides the default target org.
 
 The path to the main file of the QCP.
 
-# flags.qcpname.summary
-
-The name of the QCP.
-
 # examples
 
 - Deploy QCP:
