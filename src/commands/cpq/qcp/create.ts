@@ -19,7 +19,7 @@ export default class CpqQcpCreate extends SfCommand<CpqQcpCreateResult> {
     path: Flags.string({
       summary: messages.getMessage('flags.path.summary'),
       char: 'p',
-      required: true,
+      required: false,
     }),
     qcpname: Flags.string({
       summary: messages.getMessage('flags.qcpname.summary'),

@@ -12,7 +12,7 @@ describe('deploy qcp', () => {
       })
     )
     .stdout()
-    .command(['cpq qcp deploy', '--targetusername', 'test', '--pathmain', './test'])
+    .command(['cpq qcp deploy', '--targetusername', 'test@test.com', '--pathmain', './test'])
     .it('insert QCP', (ctx) => {
       const result = ctx.returned as CpqQcpDeployResult;
       expect(result.isSuccess).to.equal(true);
@@ -28,7 +28,7 @@ describe('deploy qcp', () => {
       })
     )
     .stdout()
-    .command(['cpq qcp deploy', '--targetusername', 'test', '--pathmain', './test'])
+    .command(['cpq qcp deploy', '--targetusername', 'test@test.com', '--pathmain', './test'])
     .it('update QCP', (ctx) => {
       const result = ctx.returned as CpqQcpDeployResult;
       expect(result.isSuccess).to.equal(true);

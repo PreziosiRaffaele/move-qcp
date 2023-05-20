@@ -1,6 +1,10 @@
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, AuthInfo, Connection } from '@salesforce/core';
 import { deployQCP } from '../../../HandleDeployQCP';
+
+const execAsync = promisify(exec);
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('move-qcp', 'cpq.qcp.deploy');
@@ -10,6 +14,12 @@ export type CpqQcpDeployResult = {
   error?: string;
   recordId?: string;
 };
+
+interface OrgDetail {
+  result: {
+    username: string;
+  };
+}
 
 export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
   public static readonly summary = messages.getMessage('summary');
@@ -33,7 +43,16 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
     this.log(process.cwd());
     const { flags } = await this.parse(CpqQcpDeploy);
     this.spinner.start('Deploying QCP...');
-    const authInfo = await AuthInfo.create({ username: flags.targetusername });
+    let userName: string;
+    if (isValidEmail(flags.targetusername)) {
+      userName = flags.targetusername;
+    } else {
+      const cmd = 'sf force org display --json -u ' + flags.targetusername;
+      const orgDetailJSON = await execAsync(cmd);
+      const orgDetail = JSON.parse(orgDetailJSON.stdout) as OrgDetail;
+      userName = orgDetail.result.username;
+    }
+    const authInfo = await AuthInfo.create({ username: userName });
     const conn = await Connection.create({ authInfo });
     const result = await deployQCP(conn, flags);
     this.spinner.stop();
@@ -42,4 +61,9 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
     }
     return result;
   }
+}
+
+function isValidEmail(input: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(input);
 }

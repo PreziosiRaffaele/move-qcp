@@ -13,15 +13,16 @@ interface Flags {
 
 export async function createQCP(flags: Flags): Promise<CpqQcpCreateResult> {
   try {
+    const path = flags.path ?? './';
     await Promise.all([
-      createFile(`${flags.path}/${flags.qcpname}/config.json`, getSettingFileCode(flags.qcpname)),
-      createFile(`${flags.path}/${flags.qcpname}/main.js`, mainCode),
+      createFile(`${path}/${flags.qcpname}/config.json`, getSettingFileCode(flags.qcpname)),
+      createFile(`${path}/${flags.qcpname}/main.js`, mainCode),
     ]);
     await Promise.all([
-      createFile(`${flags.path}/${flags.qcpname}/onAfterCalculate/afterCalculate.js`, afterCalculateCode),
-      createFile(`${flags.path}/${flags.qcpname}/onBeforeCalculate/beforeCalculate.js`, beforeCalculateCode),
-      createFile(`${flags.path}/${flags.qcpname}/onInit/init.js`, initCode),
-      createFile(`${flags.path}/${flags.qcpname}/pageSecurityPlugin/psp.js`, pspCode),
+      createFile(`${path}/${flags.qcpname}/onAfterCalculate/afterCalculate.js`, afterCalculateCode),
+      createFile(`${path}/${flags.qcpname}/onBeforeCalculate/beforeCalculate.js`, beforeCalculateCode),
+      createFile(`${path}/${flags.qcpname}/onInit/init.js`, initCode),
+      createFile(`${path}/${flags.qcpname}/pageSecurityPlugin/psp.js`, pspCode),
     ]);
     return { isSuccess: true };
   } catch (err) {
