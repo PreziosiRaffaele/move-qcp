@@ -1,7 +1,7 @@
 {
   "name": "move-qcp",
   "description": "Deploy CPQ Quote Calculator Plugin",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "dependencies": {
     "@oclif/core": "^2.8.2",
     "@salesforce/core": "^3.34.8",
@@ -46,6 +46,7 @@
   "engines": {
     "node": ">=14.0.0"
   },
+  "homepage": "https://github.com/PreziosiRaffaele/move-qcp",
   "files": [
     "/lib",
     "/messages",
@@ -73,15 +74,16 @@
     ],
     "topics": {
       "cpq": {
-        "description": "description for cpq",
+        "description": "cpq commands",
         "subtopics": {
           "qcp": {
-            "description": "description for cpq.qcp"
+            "description": "qcp commands"
           }
         }
       }
     }
   },
+  "repository": "PreziosiRaffaele/move-qcp",
   "scripts": {
     "build": "wireit",
     "clean": "sf-clean",

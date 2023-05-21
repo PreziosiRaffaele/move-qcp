@@ -12,7 +12,7 @@ You can now take advantage of modularization by utilizing modules to split the Q
 ## Install
 
 ```bash
-sf plugins install move-qcp@x.y.z
+sf plugins install preziosiraffaele/move-qcp
 ```
 
 ## Commands
