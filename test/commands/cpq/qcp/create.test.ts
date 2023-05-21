@@ -11,7 +11,7 @@ describe('creating qcp', () => {
 
   test
     .stdout()
-    .command(['cpq qcp create', '--path', './test', '--qcpname', 'qcp'])
+    .command(['cpq qcp create', '-d', './test', '--name', 'qcp'])
     .it('creating QCP', (ctx) => {
       const result = ctx.returned as CpqQcpCreateResult;
       expect(result.isSuccess).to.equal(true);

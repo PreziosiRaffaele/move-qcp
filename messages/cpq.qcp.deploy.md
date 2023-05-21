@@ -1,16 +1,16 @@
 # summary
 
-Summary of a command.
+Deploy the QCP to the target org.
 
 # description
 
-Description of a command.
+Deploy the QCP to the target org.
 
 # flags.targetusername.summary
 
-A username or alias for the target org. Overrides the default target org.
+A username or alias for the target org.
 
-# flags.pathmain.summary
+# flags.sourcedir.summary
 
 The path to the main file of the QCP.
 

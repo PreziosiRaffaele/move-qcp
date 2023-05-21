@@ -32,7 +32,7 @@ interface CustomScriptUnFormatted {
 
 interface Flags {
   targetusername: string;
-  pathmain: string;
+  sourcedir: string;
 }
 
 interface DmlResult {
@@ -42,7 +42,7 @@ interface DmlResult {
 
 export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
   try {
-    const [script, qcp] = await Promise.all([rollup(flags.pathmain), getCustomScript(flags.pathmain)]);
+    const [script, qcp] = await Promise.all([rollup(flags.sourcedir), getCustomScript(flags.sourcedir)]);
     qcp['SBQQ__Code__c'] = script;
     await fetchQPCId(conn, qcp);
     const dmlResult: DmlResult = await upsertQuoteCalculatorPlugin(conn, qcp);

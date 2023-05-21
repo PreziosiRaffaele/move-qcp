@@ -15,6 +15,7 @@ export default async function getConnection(userInput: string): Promise<Connecti
   if (isValidEmail(userInput)) {
     userName = userInput;
   } else {
+    // assume it's an alias
     const cmd = 'sf force org display --json -u ' + userInput;
     const orgDetailJSON = await execAsync(cmd);
     const orgDetail = JSON.parse(orgDetailJSON.stdout) as OrgDetail;

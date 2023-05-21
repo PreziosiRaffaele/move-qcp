@@ -16,15 +16,16 @@ export default class CpqQcpCreate extends SfCommand<CpqQcpCreateResult> {
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    path: Flags.string({
-      summary: messages.getMessage('flags.path.summary'),
-      char: 'p',
+    outputdir: Flags.string({
+      summary: messages.getMessage('flags.outputdir.summary'),
+      char: 'd',
       required: false,
     }),
-    qcpname: Flags.string({
-      summary: messages.getMessage('flags.qcpname.summary'),
+    name: Flags.string({
+      summary: messages.getMessage('flags.name.summary'),
       char: 'n',
       required: true,
+      dafault: './',
     }),
   };
 

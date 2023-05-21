@@ -23,9 +23,9 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
       char: 'u',
       required: true,
     }),
-    pathmain: Flags.string({
-      summary: messages.getMessage('flags.pathmain.summary'),
-      char: 'p',
+    sourcedir: Flags.string({
+      summary: messages.getMessage('flags.sourcedir.summary'),
+      char: 'd',
       required: true,
     }),
   };

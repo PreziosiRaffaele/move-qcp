@@ -6,11 +6,11 @@ Create the QCP folder structure.
 
 Create the QCP folder structure.
 
-# flags.path.summary
+# flags.outputdir.summary
 
-The path for the QCP.
+Directory path to store the QCP. Default is the current directory.
 
-# flags.qcpname.summary
+# flags.name.summary
 
 The name of the QCP.
 
@@ -18,7 +18,7 @@ The name of the QCP.
 
 - Deploy QCP:
 
-  <%= config.bin %> <%= command.id %> --pathmain <path> --qcpname <name>
+  <%= config.bin %> <%= command.id %> --outputdir <path> --qcpname <name>
 
 # info.create
 
