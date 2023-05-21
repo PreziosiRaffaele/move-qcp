@@ -1,7 +1,7 @@
 {
   "name": "move-qcp",
   "description": "Deploy CPQ Quote Calculator Plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "dependencies": {
     "@oclif/core": "^2.8.2",
     "@salesforce/core": "^3.34.8",
@@ -58,7 +58,9 @@
     "salesforcedx",
     "sfdx-plugin",
     "sf-plugin",
-    "sf"
+    "sf",
+    "cpq",
+    "qcp"
   ],
   "license": "BSD-3-Clause",
   "main": "lib/index.js",
@@ -70,9 +72,6 @@
       "@oclif/plugin-help"
     ],
     "topics": {
-      "hello": {
-        "description": "Commands to say hello."
-      },
       "cpq": {
         "description": "description for cpq",
         "subtopics": {
