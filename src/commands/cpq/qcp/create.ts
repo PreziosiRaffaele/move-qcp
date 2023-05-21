@@ -20,12 +20,12 @@ export default class CpqQcpCreate extends SfCommand<CpqQcpCreateResult> {
       summary: messages.getMessage('flags.outputdir.summary'),
       char: 'd',
       required: false,
+      default: './',
     }),
     name: Flags.string({
       summary: messages.getMessage('flags.name.summary'),
       char: 'n',
       required: true,
-      dafault: './',
     }),
   };
 
