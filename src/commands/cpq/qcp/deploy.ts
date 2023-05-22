@@ -23,15 +23,15 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
       char: 'u',
       required: true,
     }),
-    sourcedir: Flags.string({
+    sourcedir: Flags.directory({
       summary: messages.getMessage('flags.sourcedir.summary'),
       char: 'd',
+      exists: true,
       required: true,
     }),
   };
 
   public async run(): Promise<CpqQcpDeployResult> {
-    this.log(process.cwd());
     const { flags } = await this.parse(CpqQcpDeploy);
     this.spinner.start('Deploying QCP...');
     const conn = await getConnection(flags.targetusername);

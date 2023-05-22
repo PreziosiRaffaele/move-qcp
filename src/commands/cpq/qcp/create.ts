@@ -16,9 +16,10 @@ export default class CpqQcpCreate extends SfCommand<CpqQcpCreateResult> {
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    outputdir: Flags.string({
+    outputdir: Flags.directory({
       summary: messages.getMessage('flags.outputdir.summary'),
       char: 'd',
+      exists: true,
       required: false,
       default: './',
     }),
