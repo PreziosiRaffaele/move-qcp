@@ -4,6 +4,7 @@ import { isAbsolute, resolve } from 'path';
 import { promisify } from 'util';
 import { Connection } from '@salesforce/core';
 import { Schema, SObjectUpdateRecord } from 'jsforce';
+import { minify } from 'uglify-es';
 import { CpqQcpDeployResult } from './commands/cpq/qcp/deploy';
 const execAsync = promisify(exec);
 export const readFileAsync = promisify(readFile);
@@ -55,7 +56,9 @@ export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpD
 async function rollup(path: string): Promise<string> {
   const cmd = `rollup ${path}/main.js --format esm`;
   const { stdout } = await execAsync(cmd);
-  return stdout;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const minified = minify(stdout) as { code: string };
+  return minified.code;
 }
 
 export async function getCustomScript(path: string): Promise<CustomScript> {
