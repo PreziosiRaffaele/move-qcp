@@ -8,9 +8,10 @@ With this plugin, you can now create a dedicated QCP folder within your reposito
 
 This brings several benefits:
 
-1. Your code is securely stored, easily accessible, and conveniently managed alongside your other version-controlled assets. This ensures that you have complete control over your qcp code and can effectively track and review changes.
-2. Take advantage of modularization by utilizing modules to split the QCP code into multiple files.
-3. The plugin automatically minifies the code before deploying it to the target org. This optimization step helps avoid reaching the maximum character limit of the textarea field.
+1. **Versioning QCP Code:** Your code is securely stored, easily accessible, and conveniently managed alongside your other version-controlled assets. This ensures that you have complete control over your qcp code and can effectively track and review changes.
+2. **Automated Deployment:** The plugin automatically deploys the QCP to the target org, avoiding the need to manually copy and paste the code into Salesforce.
+3. **Modularization:** Take advantage of modularization by utilizing modules to split the QCP code into multiple files.
+4. **Code Minification:** The plugin automatically minifies the code before deploying it to the target org. This optimization step helps avoid reaching the maximum character limit of the textarea field.
 
 ## Install
 
