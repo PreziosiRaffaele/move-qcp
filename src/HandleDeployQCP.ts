@@ -4,7 +4,7 @@ import { isAbsolute, resolve } from 'path';
 import { promisify } from 'util';
 import { Connection } from '@salesforce/core';
 import { Schema, SObjectUpdateRecord } from 'jsforce';
-import { minify } from 'uglify-es';
+import { minify } from 'uglify-js';
 import { CpqQcpDeployResult } from './commands/cpq/qcp/deploy';
 const execAsync = promisify(exec);
 export const readFileAsync = promisify(readFile);
