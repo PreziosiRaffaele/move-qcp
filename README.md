@@ -4,10 +4,13 @@ The [Javascript Quote Calculator Plugin](https://developer.salesforce.com/docs/a
 
 Unfortunately the code is stored as data within Salesforce, making it difficult to manage and track changes effectively.
 
-This sf cli plugin empowers you to create a QCP folder within the repository and deploy it to the target org.
-This ensures that your code is safely stored, easily accessible, and conveniently managed alongside your other version-controlled assets.
+With this plugin, you can now create a dedicated QCP folder within your repository and effortlessly deploy it to the target org.
 
-You can now take advantage of modularization by utilizing modules to split the QCP code into multiple files.
+This brings several benefits:
+
+1. Your code is securely stored, easily accessible, and conveniently managed alongside your other version-controlled assets. This ensures that you have complete control over your qcp code and can effectively track and review changes.
+2. Take advantage of modularization by utilizing modules to split the QCP code into multiple files.
+3. The plugin automatically minifies the code before deploying it to the target org. This optimization step helps avoid reaching the maximum character limit of the textarea field.
 
 ## Install
 
