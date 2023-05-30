@@ -1,12 +1,11 @@
-import { exec } from 'child_process';
 import { readFile } from 'fs';
 import { isAbsolute, resolve } from 'path';
 import { promisify } from 'util';
 import { Connection } from '@salesforce/core';
 import { Schema, SObjectUpdateRecord } from 'jsforce';
 import { minify } from 'uglify-js';
+import { rollup } from 'rollup';
 import { CpqQcpDeployResult } from './commands/cpq/qcp/deploy';
-const execAsync = promisify(exec);
 export const readFileAsync = promisify(readFile);
 
 interface CustomScript {
@@ -43,7 +42,7 @@ interface DmlResult {
 
 export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
   try {
-    const [script, qcp] = await Promise.all([rollup(flags.sourcedir), getCustomScript(flags.sourcedir)]);
+    const [script, qcp] = await Promise.all([rollupCode(flags.sourcedir), getCustomScript(flags.sourcedir)]);
     qcp['SBQQ__Code__c'] = script;
     await fetchQPCId(conn, qcp);
     const dmlResult: DmlResult = await upsertQuoteCalculatorPlugin(conn, qcp);
@@ -53,11 +52,15 @@ export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpD
   }
 }
 
-async function rollup(path: string): Promise<string> {
-  const cmd = `rollup ${path}/main.js --format esm`;
-  const { stdout } = await execAsync(cmd);
+async function rollupCode(path: string): Promise<string> {
+  const bundle = await rollup({
+    input: `${path}/main.js`,
+    output: { format: 'esm' },
+  });
+  const { output } = await bundle.generate({ format: 'esm' });
+  const code = output[0].code;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const minified = minify(stdout) as { code: string };
+  const minified = minify(code) as { code: string };
   return minified.code;
 }
 
