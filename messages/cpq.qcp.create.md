@@ -12,7 +12,7 @@ Directory path to store the QCP. Default is the current directory.
 
 # flags.name.summary
 
-The name of the QCP.
+The desired name for the custom script along with the folder name for its creation.
 
 # examples
 

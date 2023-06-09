@@ -29,6 +29,11 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
       exists: true,
       required: true,
     }),
+    'no-code-minification': Flags.boolean({
+      summary: messages.getMessage('flags.no-code-minification.summary'),
+      char: 'c',
+      default: false,
+    }),
   };
 
   public async run(): Promise<CpqQcpDeployResult> {

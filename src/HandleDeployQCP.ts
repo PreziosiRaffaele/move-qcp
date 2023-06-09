@@ -42,7 +42,11 @@ interface DmlResult {
 
 export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
   try {
-    const [script, qcp] = await Promise.all([rollupCode(flags.sourcedir), getCustomScript(flags.sourcedir)]);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const [script, qcp] = await Promise.all([
+      rollupCode(flags.sourcedir, flags['no-code-minification']),
+      getCustomScript(flags.sourcedir),
+    ]);
     qcp['SBQQ__Code__c'] = script;
     await fetchQPCId(conn, qcp);
     const dmlResult: DmlResult = await upsertQuoteCalculatorPlugin(conn, qcp);
@@ -52,16 +56,20 @@ export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpD
   }
 }
 
-async function rollupCode(path: string): Promise<string> {
+async function rollupCode(path: string, noCodeMinification: boolean): Promise<string> {
   const bundle = await rollup({
     input: `${path}/main.js`,
     output: { format: 'esm' },
   });
   const { output } = await bundle.generate({ format: 'esm' });
   const code = output[0].code;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const minified = minify(code) as { code: string };
-  return minified.code;
+  if (noCodeMinification) {
+    return code;
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const minified = minify(code) as { code: string };
+    return minified.code;
+  }
 }
 
 export async function getCustomScript(path: string): Promise<CustomScript> {

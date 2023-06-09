@@ -35,7 +35,7 @@ USAGE
   $ sf cpq qcp create
 
 FLAGS
-  -n, --name=<value> [required] The name of the QCP.
+  -n, --name=<value> [required] The desired name for the custom script along with the folder name for its creation.
   -d, --outputdir=<value> Directory path to store the QCP [default: current directory].
 
 GLOBAL FLAGS
@@ -59,6 +59,7 @@ USAGE
 FLAGS
   -u, --targetusername=<value>  [required] A username or alias for the target org.
   -d, --sourcedir=<value> [required] The directory path to the QCP.
+  -c, --no-code-minification  Deploy without code minification. [default: false]
 
 GLOBAL FLAGS
   --json  Format output as json.

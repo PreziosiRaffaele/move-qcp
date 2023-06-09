@@ -23,3 +23,7 @@ The path to the main file of the QCP.
 # info.hello
 
 Hello %s at %s.
+
+# flags.no-code-minification.summary
+
+Deploy without code minification.
