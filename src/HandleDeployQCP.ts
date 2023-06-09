@@ -42,8 +42,8 @@ interface DmlResult {
 
 export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const [script, qcp] = await Promise.all([
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       rollupCode(flags.sourcedir, flags['no-code-minification']),
       getCustomScript(flags.sourcedir),
     ]);
