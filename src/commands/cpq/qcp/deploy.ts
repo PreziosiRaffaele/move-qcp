@@ -14,7 +14,6 @@ export type CpqQcpDeployResult = {
 
 export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
   public static readonly summary = messages.getMessage('summary');
-  public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
@@ -43,7 +42,7 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
     const result = await deployQCP(conn, flags);
     this.spinner.stop();
     if (!result.isSuccess) {
-      throw messages.createError(result.error);
+      throw messages.createError('error.Deploy', [result.error]);
     }
     return result;
   }

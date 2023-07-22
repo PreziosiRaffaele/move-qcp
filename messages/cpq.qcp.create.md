@@ -2,10 +2,6 @@
 
 Create the QCP folder structure.
 
-# description
-
-Create the QCP folder structure.
-
 # flags.outputdir.summary
 
 Directory path to store the QCP. Default is the current directory.

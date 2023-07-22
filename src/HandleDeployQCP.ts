@@ -2,7 +2,7 @@ import { readFile } from 'fs';
 import { isAbsolute, resolve } from 'path';
 import { promisify } from 'util';
 import { Connection } from '@salesforce/core';
-import { Schema, SObjectUpdateRecord } from 'jsforce';
+import { Schema, SObjectUpdateRecord, SaveResult } from 'jsforce';
 import { minify } from 'uglify-js';
 import { rollup } from 'rollup';
 import { CpqQcpDeployResult } from './commands/cpq/qcp/deploy';
@@ -35,11 +35,6 @@ interface Flags {
   sourcedir: string;
 }
 
-interface DmlResult {
-  Id?: string;
-  success: boolean;
-}
-
 export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
   try {
     const [script, qcp] = await Promise.all([
@@ -49,8 +44,12 @@ export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpD
     ]);
     qcp['SBQQ__Code__c'] = script;
     await fetchQPCId(conn, qcp);
-    const dmlResult: DmlResult = await upsertQuoteCalculatorPlugin(conn, qcp);
-    return { isSuccess: dmlResult.success, recordId: dmlResult.Id };
+    const dmlResult: SaveResult = await upsertQuoteCalculatorPlugin(conn, qcp);
+    return {
+      isSuccess: dmlResult.success,
+      recordId: dmlResult.id,
+      error: dmlResult.success ? undefined : dmlResult.errors[0].message,
+    };
   } catch (err) {
     return { isSuccess: false, error: err instanceof Error ? err.message : String(err) };
   }
@@ -121,8 +120,8 @@ async function fetchQPCId(conn: Connection, qcp: CustomScript): Promise<void> {
   }
 }
 
-async function upsertQuoteCalculatorPlugin(conn: Connection, qcp: CustomScript): Promise<DmlResult> {
-  let result: DmlResult;
+async function upsertQuoteCalculatorPlugin(conn: Connection, qcp: CustomScript): Promise<SaveResult> {
+  let result: SaveResult;
   if (!qcp.Id) {
     result = await conn.insert('SBQQ__CustomScript__c', qcp);
   } else {
