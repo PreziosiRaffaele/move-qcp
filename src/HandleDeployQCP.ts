@@ -33,16 +33,13 @@ interface CustomScriptUnFormatted {
 interface Flags {
   targetusername: string;
   sourcedir: string;
+  'no-code-minification': boolean;
 }
 
 export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
   try {
-    const [script, qcp] = await Promise.all([
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      rollupCode(flags.sourcedir, flags['no-code-minification']),
-      getCustomScript(flags.sourcedir),
-    ]);
-    qcp['SBQQ__Code__c'] = script;
+    const [code, qcp] = await Promise.all([rollupCode(flags.sourcedir), getCustomScript(flags.sourcedir)]);
+    qcp['SBQQ__Code__c'] = minifyCode(code, flags['no-code-minification']);
     await fetchQPCId(conn, qcp);
     const dmlResult: SaveResult = await upsertQuoteCalculatorPlugin(conn, qcp);
     return {
@@ -51,17 +48,24 @@ export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpD
       error: dmlResult.success ? undefined : dmlResult.errors[0].message,
     };
   } catch (err) {
-    return { isSuccess: false, error: err instanceof Error ? err.message : String(err) };
+    return {
+      isSuccess: false,
+      error: err instanceof Error ? err.message : String(err),
+    };
   }
 }
 
-async function rollupCode(path: string, noCodeMinification: boolean): Promise<string> {
+async function rollupCode(path: string): Promise<string> {
   const bundle = await rollup({
     input: `${path}/main.js`,
     output: { format: 'esm' },
   });
   const { output } = await bundle.generate({ format: 'esm' });
   const code = output[0].code;
+  return code;
+}
+
+function minifyCode(code: string, noCodeMinification: boolean): string {
   if (noCodeMinification) {
     return code;
   } else {
