@@ -44,6 +44,7 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
     if (!result.isSuccess) {
       throw messages.createError('error.Deploy', [result.error]);
     }
+    this.log(`QCP deployed successfully with Id: ${result.recordId}`);
     return result;
   }
 }
