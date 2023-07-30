@@ -39,7 +39,7 @@ interface Flags {
 export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
   try {
     const [code, qcp] = await Promise.all([rollupCode(flags.sourcedir), getCustomScript(flags.sourcedir)]);
-    qcp['SBQQ__Code__c'] = minifyCode(code, flags['no-code-minification']);
+    qcp['SBQQ__Code__c'] = flags['no-code-minification'] ? code : minifyCode(code);
     await fetchQPCId(conn, qcp);
     const dmlResult: SaveResult = await upsertQuoteCalculatorPlugin(conn, qcp);
     return {
@@ -65,14 +65,10 @@ async function rollupCode(path: string): Promise<string> {
   return code;
 }
 
-function minifyCode(code: string, noCodeMinification: boolean): string {
-  if (noCodeMinification) {
-    return code;
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const minified = minify(code) as { code: string };
-    return minified.code;
-  }
+function minifyCode(code: string): string {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const minified = minify(code) as { code: string };
+  return minified.code;
 }
 
 export async function getCustomScript(path: string): Promise<CustomScript> {
