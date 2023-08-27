@@ -1,49 +1,62 @@
-import { expect, test } from '@oclif/test';
-import { Connection, AuthInfo } from '@salesforce/core';
-import { CpqQcpDeployResult } from '../../../../src/commands/cpq/qcp/deploy';
+import { expect } from 'chai';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { Connection } from '@salesforce/core';
+import CpqQcpDeploy from '../../../../src/commands/cpq/qcp/deploy';
 
-describe('deploy qcp', () => {
-  test
-    .stub(AuthInfo, 'create', () => Promise.resolve({}))
-    .stub(Connection, 'create', () =>
-      Promise.resolve({
-        query: () => Promise.resolve({ records: [] }),
-        insert: () => Promise.resolve({ id: 'a0P0o0000123456', success: true }),
-      })
-    )
-    .stdout()
-    .command(['cpq qcp deploy', '--targetusername', 'test@test.com', '-d', './test'])
-    .it('insert QCP', (ctx) => {
-      const result = ctx.returned as CpqQcpDeployResult;
-      expect(result.isSuccess).to.equal(true);
-      expect(result.recordId).to.equal('a0P0o0000123456');
+describe('Deploy QCP', () => {
+  const $$ = new TestContext();
+  let testOrg = new MockTestOrgData();
+
+  beforeEach(() => {
+    testOrg = new MockTestOrgData();
+    testOrg.orgId = '00Dxx0000000000';
+    // Stub the ux methods on SfCommand so that you don't get any command output in your tests.
+    // You can also make assertions on the ux methods to ensure that they are called with the
+    // correct arguments.
+  });
+
+  it('insert QCP', async () => {
+    await $$.stubAuths(testOrg);
+
+    $$.SANDBOX.stub(Connection.prototype, 'query').resolves({ records: [], totalSize: 0, done: true });
+    $$.SANDBOX.stub(Connection.prototype, 'sobject').returnsThis();
+    $$.SANDBOX.stub(Connection.prototype, 'create').resolves({ id: 'a0P0o0000123456', success: true, errors: [] });
+
+    const result = await CpqQcpDeploy.run(['--targetusername', testOrg.username, '--sourcedir', './test']);
+    expect(result.isSuccess).to.equal(true);
+    expect(result.recordId).to.equal('a0P0o0000123456');
+  });
+
+  it('update QCP', async () => {
+    await $$.stubAuths(testOrg);
+
+    $$.SANDBOX.stub(Connection.prototype, 'query').resolves({
+      records: [{ Id: 'a0P0o0000123451' }],
+      totalSize: 1,
+      done: true,
+    });
+    $$.SANDBOX.stub(Connection.prototype, 'update').resolves([{ id: 'a0P0o0000123451', success: true, errors: [] }]);
+
+    const result = await CpqQcpDeploy.run(['--targetusername', testOrg.username, '--sourcedir', './test']);
+    expect(result.isSuccess).to.equal(true);
+    expect(result.recordId).to.equal('a0P0o0000123451');
+  });
+
+  it('Deploy failed: DML error.', async () => {
+    await $$.stubAuths(testOrg);
+
+    $$.SANDBOX.stub(Connection.prototype, 'query').resolves({ records: [], totalSize: 0, done: true });
+    $$.SANDBOX.stub(Connection.prototype, 'sobject').returnsThis();
+    $$.SANDBOX.stub(Connection.prototype, 'create').resolves({
+      success: false,
+      errors: [{ message: 'DML error', errorCode: '02' }],
     });
 
-  test
-    .stub(AuthInfo, 'create', () => Promise.resolve({}))
-    .stub(Connection, 'create', () =>
-      Promise.resolve({
-        query: () => Promise.resolve({ records: [{ Id: 'a0P0o0000123451' }] }),
-        update: () => Promise.resolve([{ id: 'a0P0o0000123451', success: true }]),
-      })
-    )
-    .stdout()
-    .command(['cpq qcp deploy', '--targetusername', 'test@test.com', '-d', './test'])
-    .it('update QCP', (ctx) => {
-      const result = ctx.returned as CpqQcpDeployResult;
-      expect(result.isSuccess).to.equal(true);
-      expect(result.recordId).to.equal('a0P0o0000123451');
-    });
-
-  test
-    .stub(AuthInfo, 'create', () => Promise.resolve({}))
-    .stub(Connection, 'create', () =>
-      Promise.resolve({
-        query: () => Promise.resolve({ records: [] }),
-        insert: () => Promise.resolve({ success: false, errors: [{ message: 'DML error' }] }),
-      })
-    )
-    .command(['cpq qcp deploy', '--targetusername', 'test@test.com', '-d', './test'])
-    .catch('Deploy failed: DML error.')
-    .it('insert QCP failed');
+    try {
+      await CpqQcpDeploy.run(['--targetusername', testOrg.username, '--sourcedir', './test']);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(error.message).to.equal('Deploy failed: DML error.');
+    }
+  });
 });

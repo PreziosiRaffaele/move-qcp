@@ -1,7 +1,7 @@
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
+import { Connection } from '@salesforce/core';
 import { deployQCP } from '../../../HandleDeployQCP';
-import { default as getConnection } from '../../../Connection';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('move-qcp', 'cpq.qcp.deploy');
@@ -17,7 +17,7 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    targetusername: Flags.string({
+    targetusername: Flags.requiredOrg({
       summary: messages.getMessage('flags.targetusername.summary'),
       char: 'u',
       required: true,
@@ -38,8 +38,8 @@ export default class CpqQcpDeploy extends SfCommand<CpqQcpDeployResult> {
   public async run(): Promise<CpqQcpDeployResult> {
     const { flags } = await this.parse(CpqQcpDeploy);
     this.spinner.start('Deploying QCP...');
-    const conn = await getConnection(flags.targetusername);
-    const result = await deployQCP(conn, flags);
+    const conn: Connection = flags.targetusername.getConnection();
+    const result = await deployQCP(conn, flags.sourcedir, flags['no-code-minification']);
     this.spinner.stop();
     if (!result.isSuccess) {
       throw messages.createError('error.Deploy', [result.error]);

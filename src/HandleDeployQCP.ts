@@ -30,16 +30,14 @@ interface CustomScriptUnFormatted {
   SBQQ__QuoteFields__c?: [string];
 }
 
-interface Flags {
-  targetusername: string;
-  sourcedir: string;
-  'no-code-minification': boolean;
-}
-
-export async function deployQCP(conn: Connection, flags: Flags): Promise<CpqQcpDeployResult> {
+export async function deployQCP(
+  conn: Connection,
+  sourcedir: string,
+  noCodeMinification: boolean
+): Promise<CpqQcpDeployResult> {
   try {
-    const [code, qcp] = await Promise.all([rollupCode(flags.sourcedir), getCustomScript(flags.sourcedir)]);
-    qcp['SBQQ__Code__c'] = flags['no-code-minification'] ? code : minifyCode(code);
+    const [code, qcp] = await Promise.all([rollupCode(sourcedir), getCustomScript(sourcedir)]);
+    qcp['SBQQ__Code__c'] = noCodeMinification ? code : minifyCode(code);
     await fetchQPCId(conn, qcp);
     const dmlResult: SaveResult = await upsertQuoteCalculatorPlugin(conn, qcp);
     return {
