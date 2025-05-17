@@ -480,6 +480,14 @@
   resolved "https://registry.npmjs.org/@jridgewell/set-array/-/set-array-1.2.1.tgz"
   integrity sha512-R8gLRTZeyp03ymzP/6Lil/28tGeGEzhx1q2k703KGWRAI1VdvPIXdG70VJc2pAMw3NA6JKL5hhFu1sJX0Mnn/A==
 
+"@jridgewell/source-map@^0.3.3":
+  version "0.3.6"
+  resolved "https://registry.npmjs.org/@jridgewell/source-map/-/source-map-0.3.6.tgz"
+  integrity sha512-1ZJTZebgqllO79ue2bm3rIGud/bOe0pP5BjSRCRxxYkEZS8STV7zN84UBbiYu7jy+eCKSnVIUgoWWE/tt+shMQ==
+  dependencies:
+    "@jridgewell/gen-mapping" "^0.3.5"
+    "@jridgewell/trace-mapping" "^0.3.25"
+
 "@jridgewell/sourcemap-codec@^1.4.10", "@jridgewell/sourcemap-codec@^1.4.14":
   version "1.4.14"
   resolved "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.14.tgz"
@@ -1509,10 +1517,10 @@ acorn-walk@^8.1.1:
   resolved "https://registry.npmjs.org/acorn-walk/-/acorn-walk-8.2.0.tgz"
   integrity sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==
 
-"acorn@^6.0.0 || ^7.0.0 || ^8.0.0", acorn@^8.4.1, acorn@^8.8.0:
-  version "8.8.1"
-  resolved "https://registry.npmjs.org/acorn/-/acorn-8.8.1.tgz"
-  integrity sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==
+"acorn@^6.0.0 || ^7.0.0 || ^8.0.0", acorn@^8.14.0, acorn@^8.4.1, acorn@^8.8.0:
+  version "8.14.1"
+  resolved "https://registry.npmjs.org/acorn/-/acorn-8.14.1.tgz"
+  integrity sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==
 
 agent-base@^6.0.2, agent-base@6:
   version "6.0.2"
@@ -2299,6 +2307,11 @@ combined-stream@^1.0.8:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+commander@^2.20.0:
+  version "2.20.3"
+  resolved "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
+  integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
 commander@^4.0.1:
   version "4.1.1"
@@ -6862,7 +6875,7 @@ sort-keys@^4.2.0:
   dependencies:
     is-plain-obj "^2.0.0"
 
-source-map-support@~0.5.19:
+source-map-support@~0.5.19, source-map-support@~0.5.20:
   version "0.5.21"
   resolved "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.21.tgz"
   integrity sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==
@@ -7157,6 +7170,16 @@ tar@^6.0.2, tar@^6.1.0, tar@^6.1.11, tar@^6.1.2:
     mkdirp "^1.0.3"
     yallist "^4.0.0"
 
+terser@^5.39.2:
+  version "5.39.2"
+  resolved "https://registry.npmjs.org/terser/-/terser-5.39.2.tgz"
+  integrity sha512-yEPUmWve+VA78bI71BW70Dh0TuV4HHd+I5SHOAfS1+QBOmvmCiiffgjR8ryyEd3KIfvPGFqoADt8LdQ6XpXIvg==
+  dependencies:
+    "@jridgewell/source-map" "^0.3.3"
+    acorn "^8.14.0"
+    commander "^2.20.0"
+    source-map-support "~0.5.20"
+
 test-exclude@^6.0.0:
   version "6.0.0"
   resolved "https://registry.npmjs.org/test-exclude/-/test-exclude-6.0.0.tgz"
@@ -7386,11 +7409,6 @@ typescript@^4.1.3, "typescript@^4.6.4 || ^5.0.0", typescript@^4.7.3, typescript@
   version "4.8.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.8.3.tgz"
   integrity sha512-goMHfm00nWPa8UvR/CPSvykqf6dVV8x/dp0c5mFTMTIu0u0FlGWRioyy7Nn0PGAdHxpJZnuO/ut+PpQ8UiHAig==
-
-uglify-js@^3.19.3:
-  version "3.19.3"
-  resolved "https://registry.npmjs.org/uglify-js/-/uglify-js-3.19.3.tgz"
-  integrity sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

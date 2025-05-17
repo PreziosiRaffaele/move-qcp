@@ -3,7 +3,7 @@ import { isAbsolute, resolve } from 'path';
 import { promisify } from 'util';
 import { Connection } from '@salesforce/core';
 import { Schema, SObjectUpdateRecord, SaveResult } from 'jsforce';
-import { minify } from 'uglify-js';
+import { minify } from 'terser';
 import { rollup } from 'rollup';
 import { CpqQcpDeployResult } from './commands/cpq/qcp/deploy';
 export const readFileAsync = promisify(readFile);
@@ -36,8 +36,8 @@ export async function deployQCP(
   noCodeMinification: boolean
 ): Promise<CpqQcpDeployResult> {
   try {
-    const [code, qcp] = await Promise.all([rollupCode(sourcedir), getCustomScript(sourcedir)]);
-    qcp['SBQQ__Code__c'] = noCodeMinification ? code : minifyCode(code);
+    const [rolledUpCode, qcp] = await Promise.all([rollupCode(sourcedir), getCustomScript(sourcedir)]);
+    qcp['SBQQ__Code__c'] = noCodeMinification ? rolledUpCode : await minifyCode(rolledUpCode);
     await fetchQPCId(conn, qcp);
     const dmlResult: SaveResult = await upsertQuoteCalculatorPlugin(conn, qcp);
     return {
@@ -63,9 +63,9 @@ async function rollupCode(path: string): Promise<string> {
   return code;
 }
 
-function minifyCode(code: string): string {
+async function minifyCode(code: string): Promise<string> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const minified = minify(code) as { code: string };
+  const minified = await minify(code) as { code: string };
   return minified.code;
 }
 
